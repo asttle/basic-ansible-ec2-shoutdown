@@ -1,0 +1,3 @@
+#Put everything inside ansible folder for gitignore
+
+/ansible/*
