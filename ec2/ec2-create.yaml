@@ -1,0 +1,25 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+  - name: Create EC2 instances
+    amazon.aws.ec2_instance:
+      name: "{{ item.name }}"
+      key_name: "ansible_keys"
+      instance_type: t2.micro
+      security_group: default
+      region: ap-south-1
+      aws_access_key: "{{ec2_access_key}}"  # From vault as defined
+      aws_secret_key: "{{ec2_secret_key}}"  # From vault as defined      
+      network:
+        assign_public_ip: true
+      image_id: "{{ item.id }}"
+      tags:
+        environment: "{{ item.name }}"
+    
+    loop:
+    - {name: 'ansible-ubuntu-instance-1', id: "ami-0ad21ae1d0696ad58"} # Creating as object as if we use same ami id due to idempotency nature of ansible it will not create multiple instances
+    - {name: 'ansible-ubuntu-instance-2', id: "ami-0ad21ae1d0696ad58"}
+    - {name: 'ansible-linux-instance-1', id: "ami-0ec0e125bb6c6e8ec"}
+
+
